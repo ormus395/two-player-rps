@@ -2,23 +2,30 @@
 <html>
   <head>
     <title>RPS</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/papercss@1.8.2/dist/paper.min.css"
+    />
   </head>
   <body>
-    <header>
-      <h1>Rock Paper Scissors</h1>
+    <header id="header">
+      <h3>Rock Paper Scissors</h3>
     </header>
-    <main id="main">
-      <form id="login">
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Enter your name"
-        />
-        <button class="btn" id="startRoom">Start</button>
-      </form>
+    <main id="main" class="container">
+      <div id="login-container" class="form-group row">
+        <form id="login">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your name"
+          />
+          <button class="btn" id="startRoom">Start</button>
+        </form>
+      </div>
     </main>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/script.js"></script>
+    <script src="./js/framework.js"></script>
   </body>
 </html>

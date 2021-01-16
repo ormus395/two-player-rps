@@ -3,7 +3,28 @@
 this is a two player rock paper scissors game that utilizes Socket.io to create
 private lobbies of two players to throw down rps.
 
-## todos
+## Description
+
+A program that allows users to create a temp username and private room to play
+a two player online Rock Paper Scissors.
+
+### data
+
+      Rooms
+      Collection of Room objects
+
+      Room
+      An object that has collection of users
+      a room name
+      user count
+
+      Users
+      collectiom of user objects
+
+      User
+      username, id, room name
+
+### todos
 
 - Need to work on client connection to existing room (lobby)
 - Need to work on canceling connection to a lobby that has 2 people

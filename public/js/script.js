@@ -17,18 +17,18 @@ TODOS:
    update ui to game when game is started
 */
 
-let state = {
-  users: [],
-};
 let socket = io();
 let url = document.location;
 let login = document.getElementById("login");
 let main = document.getElementById("main");
 
+let lobbyUsers = [];
+let user;
+
 login.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  let nameValue = document.getElementById("name").value;
+  let username = document.getElementById("name").value;
 
   // determine if this is an existing lobby uri
   // if existing lobby uri
@@ -42,20 +42,29 @@ login.addEventListener("submit", (e) => {
   // create ui and sharable link
 
   if (url.search.split("?")[1]) {
-    joinLobby(nameValue);
+    // url includes room name,
+    // get username and emit joinRoom event to join room on the server
+    // server is looking for an object with username and a roomname
+    // roomname is search param from the url
+    //username from input
+    let data = {
+      username: username,
+      room: url.search.split("?")[1],
+    };
+
+    console.log("url differnet");
+    socket.emit("joinRoom", data);
   } else {
-    createNewLobby(nameValue)
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        let { user } = json;
-        let { room } = json;
-        // get user object from server, save on client end
-        // get room from server to create shareable link
-        // get room to join from server response
-        // will return in room key in json object
-        socket.emit("joinRoom", { user: user, room: room });
-      });
+    console.log("url not diif");
+    // emit createRoom event
+    socket.emit("createRoom", username, (response) => {
+      if (response.status === "ok") {
+        buildLobbyForm();
+        buildLobbyList(response.users);
+        buildInviteLink(response.room);
+        // div.innerHTML = `send this link to a friend: ${document.location}?${response.room}`;
+      }
+    });
   }
 });
 
@@ -63,53 +72,10 @@ login.addEventListener("submit", (e) => {
 // get rid of form, create lobby rules form
 // add space to show connected users
 // create join link
-socket.on("user connected", function (msg) {
-  console.log(
-    `user: ${msg.user.username} with id: ${msg.user.id} has connected to this room: ${msg.room}`
-  );
-
-  login.style.display = "none";
+socket.on("userJoined", function (data) {
+  // this is called when a user joins a private lobby,
+  // need to hide the login form,
   // build lobby
-  let form = document.createElement("form");
-  form.id = "lobby-settings";
-
-  form.innerHTML = `
-   <label for="rounds">Rounds:</label>
-   <select name="rounds" id="rounds">
-      <option value="1">1</option>
-      <option value="3">3</option>
-      <option value="5">5</option>
-   </select>
-   <label for="throw-time">Throw time in seconds:</label>
-   <select name="throw-time" id="throw-time">
-      <option value="3">3</option>
-      <option value="5">5</option>
-      <option value="7">7</option>
-   </select>
-   <button type="submit" id="lobby-button">Start Game</button>
-  `;
-
-  main.appendChild(form);
+  document.getElementById("login-container").style.display = "none";
+  buildLobbyList(data.users);
 });
-
-function createNewLobby(nameValue) {
-  // get the name from the new user
-  // send data to the server
-  return fetch("/create-room", {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: nameValue }),
-  });
-}
-
-function joinLobby(nameValue) {
-  let data = {
-    name: nameValue,
-    lobby: url.search.split("?")[1],
-  };
-  return fetch("/rps", {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-}
