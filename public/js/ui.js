@@ -8,7 +8,7 @@ function buildInviteLink(room) {
   let header = document.getElementById("header");
   let p = document.createElement("p");
   p.textContent = `Send link to friend: ${document.URL}?${room}`;
-
+  p.id = "link";
   header.appendChild(p);
 }
 
@@ -62,6 +62,23 @@ function buildLobbyForm() {
       </select>
       <button onclick=startGame(event) type="submit" id="start-game">Start Game</button>
      `;
-
   main.appendChild(form);
+}
+
+function buildGameBoard() {
+  document.getElementById("lobby-settings").style.display = "none";
+  document.getElementById("lobby-list").style.display = "none";
+  document.getElementById("link").style.display = "none";
+
+  let scoreboard = document.createElement("div");
+  scoreboard.id = "scoreboard";
+
+  let users = ["userOne", "userTwo"];
+
+  for (let i = 0; i < users.length; i++) {
+    let p = document.createElement("p");
+    p.textContent = user[i];
+
+    scoreboard.appendChild(p);
+  }
 }

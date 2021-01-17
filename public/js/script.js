@@ -87,4 +87,5 @@ socket.on("gameStarted", function (data) {
   // hide every element in main
   // create game board
   // create timer progress bar
+  buildGameBoard();
 });
