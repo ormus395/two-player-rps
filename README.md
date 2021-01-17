@@ -26,9 +26,10 @@ a two player online Rock Paper Scissors.
 
 ### todos
 
-- Need to work on client connection to existing room (lobby)
+- [x] Need to work on client connection to existing room (lobby)
 - Need to work on canceling connection to a lobby that has 2 people
-- Need to create game when lobby owner hits start
+- [x] Need to create game when lobby owner hits start
 - Need to figure out how to build game when lobby owner hits start
 - Need to figure out how to create a lobby owner (probably auth token, socket.io allows auth)
 - Need to create special emits and broadcasts for RPS game
+- Need to work on RPS logic that has been modified for a two player game using sockets to communicate back and forth
