@@ -66,9 +66,20 @@ function buildLobbyForm() {
 }
 
 function buildGameBoard() {
-  document.getElementById("lobby-settings").style.display = "none";
-  document.getElementById("lobby-list").style.display = "none";
-  document.getElementById("link").style.display = "none";
+  let lobbySettings = document.getElementById("lobby-settings");
+  let lobbyList = document.getElementById("lobby-list");
+  let link = document.getElementById("link");
+  if (lobbySettings) {
+    lobbySettings.style.display = "none";
+  }
+
+  if (lobbyList) {
+    lobbyList.style.display = "none";
+  }
+
+  if (link) {
+    link.style.display = "none";
+  }
 
   let scoreboard = document.createElement("div");
   scoreboard.id = "scoreboard";
@@ -77,8 +88,13 @@ function buildGameBoard() {
 
   for (let i = 0; i < users.length; i++) {
     let p = document.createElement("p");
-    p.textContent = user[i];
+    p.id = users[i];
+    p.textContent = users[i];
 
     scoreboard.appendChild(p);
   }
+
+  main.appendChild(scoreboard);
+
+  let gameBoard = document.createElement("div");
 }

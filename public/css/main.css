@@ -1,0 +1,44 @@
+/* generals */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+/* utils */
+.btn {
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.form-group {
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* header */
+#header {
+  text-align: center;
+}
+
+/* main */
+
+/*login*/
+#login input {
+  border: none;
+  border-bottom: 2px solid black;
+  margin-bottom: 1rem;
+}
