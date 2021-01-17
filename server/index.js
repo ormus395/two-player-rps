@@ -18,18 +18,21 @@ const path = require("path");
 const io = require("socket.io")(http);
 const bodyParser = require("body-parser");
 
-const Room = require("./Room");
+// const Room = require("./Room");
 const User = require("./User");
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // registered rooms
-let rooms = [];
+// let rooms = [];
 
 // created users
 let users = [];
-
+function filterByRoom(room) {
+  // returns the users associated with the specific room
+  return users.filter((user) => user.room === room);
+}
 // send index html to client
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../", "public/index.html"));
@@ -44,16 +47,16 @@ io.on("connection", (socket) => {
     console.log(`user: ${username}`);
     // create a room name, rando string
     let roomName = Math.random().toString().substr(2, 8);
-    const room = new Room(roomName);
+    // const room = new Room(roomName);
     const user = new User(socket.id, username, roomName);
 
     // keeps track of connectes users
     users.push(user);
 
-    room.addUser(user);
-    rooms.push(room);
+    // room.addUser(user);
+    // rooms.push(room);
     // join the room
-    socket.join(room.name);
+    socket.join(user.room);
 
     // works a lot like request response cycle
     cb({
@@ -61,7 +64,7 @@ io.on("connection", (socket) => {
       message: "Room created",
       // need to filter this
       // only send users connectes to the created room
-      users: users,
+      users: filterByRoom(user.room),
       room: roomName,
     });
   });
@@ -83,7 +86,7 @@ io.on("connection", (socket) => {
     io.in(user.room).emit("userJoined", {
       message: `The user: ${user.username} has joined`,
       // only send users connected to room
-      users: users,
+      users: filterByRoom(user.room),
     });
 
     console.log(socket.rooms);
@@ -102,14 +105,40 @@ io.on("connection", (socket) => {
       const ids = await io.of("/chat").in("general").allSockets();
    */
 
+  socket.on("gameStart", (args) => {
+    // create variabled for game logic
+    // receives rounds and throw time
+    // emit gameStarted event
+    // can get room name from socket id
+    // that emitted the event
+    // use this id to filter users
+    // get room name, and emit to that
+    // room from user id
+    let room;
+
+    users.forEach((user) => {
+      if (user.id === socket.id) {
+        room = user.room;
+      }
+    });
+
+    io.in(room).emit("gameStarted", {
+      users: filterByRoom(room),
+      rounds: args.rounds,
+      throwTime: args.throwTime,
+    });
+  });
+
   socket.on("disconnecting", () => {
     console.log(socket.rooms); // the Set contains at least the socket ID
+    // need to inform users lobby that they are disconnecting
   });
 
   socket.on("disconnect", () => {
     // socket.rooms.size === 0
     console.log("user disconnected");
     console.log(socket.rooms.size);
+    // need to tell the lobby a user disconnected
   });
 });
 

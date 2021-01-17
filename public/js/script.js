@@ -63,6 +63,7 @@ login.addEventListener("submit", (e) => {
         buildLobbyList(response.users);
         buildInviteLink(response.room);
         // div.innerHTML = `send this link to a friend: ${document.location}?${response.room}`;
+        user = response.users[0];
       }
     });
   }
@@ -78,4 +79,12 @@ socket.on("userJoined", function (data) {
   // build lobby
   document.getElementById("login-container").style.display = "none";
   buildLobbyList(data.users);
+});
+
+socket.on("gameStarted", function (data) {
+  // data: users, game state
+  console.log(data);
+  // hide every element in main
+  // create game board
+  // create timer progress bar
 });

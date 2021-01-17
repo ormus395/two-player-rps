@@ -60,7 +60,7 @@ function buildLobbyForm() {
          <option value="5">5</option>
          <option value="7">7</option>
       </select>
-      <button type="submit" id="lobby-button">Start Game</button>
+      <button onclick=startGame(event) type="submit" id="start-game">Start Game</button>
      `;
 
   main.appendChild(form);
