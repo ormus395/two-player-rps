@@ -1,3 +1,6 @@
+// start game should emit gamestart to the server
+// add events to the buttons
+// and create game object
 function startGame(e) {
   e.preventDefault();
   let rounds = document.getElementById("rounds").value;
@@ -9,3 +12,19 @@ function startGame(e) {
   // emit game start,
   socket.emit("gameStart", { rounds, throwTime });
 }
+
+// adds events to the buttons
+function addCircleEvents(e) {
+  let handTypes = document.querySelectorAll(".circle");
+
+  handTypes.forEach((handType) => {
+    handType.addEventListener("click", function (e) {
+      socket.emit("handPicked", { handType: e.target.classList[1] });
+    });
+  });
+}
+
+// game will have the rounds,
+// throw time
+// and general game loop
+function game() {}

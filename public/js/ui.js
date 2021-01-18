@@ -65,7 +65,7 @@ function buildLobbyForm() {
   main.appendChild(form);
 }
 
-function buildGameBoard() {
+function buildScoreboard(users) {
   let lobbySettings = document.getElementById("lobby-settings");
   let lobbyList = document.getElementById("lobby-list");
   let link = document.getElementById("link");
@@ -83,18 +83,71 @@ function buildGameBoard() {
 
   let scoreboard = document.createElement("div");
   scoreboard.id = "scoreboard";
-
-  let users = ["userOne", "userTwo"];
+  scoreboard.classList.add("flex", "container");
 
   for (let i = 0; i < users.length; i++) {
-    let p = document.createElement("p");
-    p.id = users[i];
-    p.textContent = users[i];
+    let div = document.createElement("div");
+    div.id = users[i].username;
 
-    scoreboard.appendChild(p);
+    let p = document.createElement("p");
+    p.textContent = users[i].username;
+    div.appendChild(p);
+
+    p = document.createElement("p");
+    p.id = users[i].username + "-score";
+    p.textContent = "0";
+
+    div.appendChild(p);
+
+    scoreboard.appendChild(div);
   }
 
   main.appendChild(scoreboard);
+}
 
+function buildGameBoard() {
   let gameBoard = document.createElement("div");
+  gameBoard.classList.add("container", "flex", "jc-center");
+  gameBoard.innerHTML = `
+    <div class ="handtypes">
+      <div class="flex">
+        <div class="circle rock"></div>
+        <div class="circle paper"></div>
+      </div>
+      <div class="flex jc-center">
+        <div class="circle scissors"></div>
+      </div>
+    </div>
+  `;
+
+  main.appendChild(gameBoard);
+}
+
+function buildProgressBar() {
+  let progress = document.querySelector(".progress");
+
+  let interval;
+  let timer = 0;
+
+  function changeProgress() {
+    interval = setInterval(increase, 1000);
+  }
+
+  function increase() {
+    if (timer === 2) {
+      clearInterval(interval);
+    }
+    if (progress.style.width.length < 1) {
+      progress.style.width = "34%";
+    } else {
+      let width = progress.style.width.split("%")[0];
+      let wNumber = parseInt(width);
+      wNumber += 34;
+      progress.style.width = `${wNumber}%`;
+      console.log(width);
+    }
+    timer++;
+  }
+
+  changeProgress();
 }

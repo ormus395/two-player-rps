@@ -64,6 +64,7 @@ login.addEventListener("submit", (e) => {
         buildInviteLink(response.room);
         // div.innerHTML = `send this link to a friend: ${document.location}?${response.room}`;
         user = response.users[0];
+        lobbyUsers = response.users;
       }
     });
   }
@@ -77,6 +78,7 @@ socket.on("userJoined", function (data) {
   // this is called when a user joins a private lobby,
   // need to hide the login form,
   // build lobby
+  lobbyUsers = data.users;
   document.getElementById("login-container").style.display = "none";
   buildLobbyList(data.users);
 });
@@ -87,5 +89,7 @@ socket.on("gameStarted", function (data) {
   // hide every element in main
   // create game board
   // create timer progress bar
+  buildScoreboard(lobbyUsers);
   buildGameBoard();
+  addCircleEvents();
 });

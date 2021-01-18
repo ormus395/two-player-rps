@@ -129,6 +129,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("handPicked", (args) => {
+    console.log(args.handType);
+  });
+
   socket.on("disconnecting", () => {
     console.log(socket.rooms); // the Set contains at least the socket ID
     // need to inform users lobby that they are disconnecting

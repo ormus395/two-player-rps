@@ -16,8 +16,12 @@ body {
 }
 
 .container {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.flex {
   display: flex;
-  align-items: center;
 }
 
 .form-group {
@@ -27,6 +31,10 @@ body {
 form {
   display: flex;
   flex-direction: column;
+}
+
+.jc-center {
+  justify-content: center;
 }
 
 /* header */
@@ -41,4 +49,65 @@ form {
   border: none;
   border-bottom: 2px solid black;
   margin-bottom: 1rem;
+}
+
+/* scoreboard */
+#scoreboard {
+  justify-content: space-between;
+  margin: 0 auto;
+  width: 80%;
+}
+
+/* circle */
+.circle {
+  border: 10px solid rgba(240, 228, 228, 0.884);
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  margin: 0 1rem;
+  transition: border-color 200ms ease-in-out;
+}
+
+/* Rock Paper Scissors */
+/* .handtypes {
+  margin-top: 2rem;
+} */
+
+.rock {
+  background-image: url(../assets/icon-rock.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.paper {
+  background-image: url(../assets/icon-paper.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.scissors {
+  background-image: url(../assets/icon-scissors.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* progress bar */
+
+.bar {
+  background: #000;
+  width: 100%;
+  max-width: 300px;
+  height: 25px;
+}
+
+.progress {
+  background: #fff;
+  width: 0;
+  height: 100%;
 }

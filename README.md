@@ -32,4 +32,11 @@ a two player online Rock Paper Scissors.
 - Need to figure out how to build game when lobby owner hits start
 - Need to figure out how to create a lobby owner (probably auth token, socket.io allows auth)
 - Need to create special emits and broadcasts for RPS game
+
+      - [x] Emmiting hand picked
+      - [x] Recieving on server
+      - [] Emmit from server to client the opponents hand type, and other game logic
+
+      - [] basic game object that runs logic
+
 - Need to work on RPS logic that has been modified for a two player game using sockets to communicate back and forth
