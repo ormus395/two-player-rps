@@ -25,6 +25,12 @@ let main = document.getElementById("main");
 let lobbyUsers = [];
 let user;
 
+/* game specific state */
+let rounds;
+let throwTime;
+let choice;
+let opponentChoice;
+
 login.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -92,4 +98,11 @@ socket.on("gameStarted", function (data) {
   buildScoreboard(lobbyUsers);
   buildGameBoard();
   addCircleEvents();
+});
+
+socket.on("handsPicked", (args) => {
+  // determine wether or not you lost>>> i guess?
+  console.log(args);
+  opponentChoice = args.opponent.handType;
+  document.querySelector(".opponent").classList.add(opponentChoice);
 });

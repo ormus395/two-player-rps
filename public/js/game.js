@@ -14,17 +14,22 @@ function startGame(e) {
 }
 
 // adds events to the buttons
-function addCircleEvents(e) {
+
+// game will have the rounds,
+// throw time
+// and general game loop
+
+function addCircleEvents() {
   let handTypes = document.querySelectorAll(".circle");
 
   handTypes.forEach((handType) => {
     handType.addEventListener("click", function (e) {
       socket.emit("handPicked", { handType: e.target.classList[1] });
+      // build new part of UI
+      // its your choice, then other players choice
+      choice = e.target.classList[1];
+      console.log(choice);
+      buildPickedScreen();
     });
   });
 }
-
-// game will have the rounds,
-// throw time
-// and general game loop
-function game() {}

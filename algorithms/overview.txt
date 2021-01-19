@@ -1,0 +1,17 @@
+socket commands
+
+client emiting to server
+createRoom: create a private lobby, looking for username
+joinRoom: joining private lobby, need room name and username
+startGame: starts the game, sends the rules to the games rules to the server
+	   can only start when 2 players are present
+
+handPick: players pick hands, sends handtype to the server
+	  sever can distinguesh based on socket id
+
+server pushing to client
+userJoined: this event is emitted to all in the room
+	    Need to rebuild lobbyList when users connect
+
+
+maintained users need to come from the server... server is the DATA GOD

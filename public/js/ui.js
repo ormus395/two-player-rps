@@ -107,7 +107,7 @@ function buildScoreboard(users) {
 
 function buildGameBoard() {
   let gameBoard = document.createElement("div");
-  gameBoard.classList.add("container", "flex", "jc-center");
+  gameBoard.classList.add("container", "flex", "jc-center", "gameBoard");
   gameBoard.innerHTML = `
     <div class ="handtypes">
       <div class="flex">
@@ -150,4 +150,20 @@ function buildProgressBar() {
   }
 
   changeProgress();
+}
+
+function buildPickedScreen() {
+  document.querySelector(".handtypes").style.display = "none";
+
+  let gameBoard = document.querySelector(".gameBoard");
+  gameBoard.innerHTML = `
+    <div>
+      <h3>You picked</h3>
+      <div class="choice circle ${choice}"></div>
+    </div>
+    <div>
+      <h3>Your oppenent picked</h3>
+      <div class="opponent circle"></div>
+    </div>
+  `;
 }

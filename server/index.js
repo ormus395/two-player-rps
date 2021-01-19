@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // registered rooms
-// let rooms = [];
+let rooms = [];
 
 // created users
 let users = [];
@@ -105,6 +105,7 @@ io.on("connection", (socket) => {
       const ids = await io.of("/chat").in("general").allSockets();
    */
 
+  // going to need to make server side game logic
   socket.on("gameStart", (args) => {
     // create variabled for game logic
     // receives rounds and throw time
@@ -129,8 +130,29 @@ io.on("connection", (socket) => {
     });
   });
 
+  // takes handtypes from client
+  // once all users of a room have picked
+  // emit the handspicked event
   socket.on("handPicked", (args) => {
     console.log(args.handType);
+    let user = users.filter((user) => user.id === socket.id)[0];
+    user.handType = args.handType;
+
+    let opponent = users.filter((o) => {
+      if (user.room === o.room) {
+        if (user.id !== o.id) {
+          return o;
+        }
+      }
+    })[0];
+    // sending to all clients in "game" room except sender
+
+    if (opponent.handType) {
+      console.log(" I aran");
+      socket.to(user.room).emit("handsPicked", {
+        opponent: opponent,
+      });
+    }
   });
 
   socket.on("disconnecting", () => {
