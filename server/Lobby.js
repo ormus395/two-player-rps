@@ -8,7 +8,7 @@ class Lobby {
   init() {}
 
   // add users to lobby
-
+  addClient() {}
   // sends the lobby data
   // users and game state
   // to the lobby
