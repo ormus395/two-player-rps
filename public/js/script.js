@@ -65,6 +65,7 @@ login.addEventListener("submit", (e) => {
     // emit createRoom event
     socket.emit("createRoom", username, (response) => {
       if (response.status === "ok") {
+        buildLobby();
         buildLobbyForm();
         buildLobbyList(response.users);
         buildInviteLink(response.room);

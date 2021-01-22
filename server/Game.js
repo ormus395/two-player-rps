@@ -5,15 +5,30 @@ the rounds and throw time
 client will take each pick from user,
 game will send result back
 */
+const Player = require("./Player");
+
 class Game {
-  constructor(users, roomName, rounds, throwTime) {
-    this.users = users;
-    this.roomName = roomName;
-    this.rounds = rounds;
-    this.throwTime = throwTime;
+  constructor(room) {
+    this.room = room;
+    this.players = {};
+    this.state = {};
   }
 
-  // init() starts game
+  // state is the rounds and throw time
+  init(state) {
+    this.state = { ...state };
+  }
 
-  //
+  // add a player to the game
+  addNewPlayer(name, socket) {
+    this.players[socket.id] = new Player(socket.id, name);
+  }
+
+  // remove player
+
+  //onPlayerUpdate() player has selected hand type from client
+  onPlayerUpdate() {}
+
+  // send information of game state
+  update() {}
 }

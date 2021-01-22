@@ -12,6 +12,16 @@ function buildInviteLink(room) {
   header.appendChild(p);
 }
 
+function buildLobby() {
+  login.style.display = "none";
+  document.getElementById("login-container").style.display = "none";
+
+  let lobby = document.createElement("div");
+  lobby.id = "lobby";
+
+  document.getElementById("main").appendChild(lobby);
+}
+
 function buildLobbyList(users) {
   // create a ul,
   // create a list item for each user
@@ -32,15 +42,19 @@ function buildLobbyList(users) {
     ul.appendChild(li);
   });
 
-  main.appendChild(ul);
+  if (!document.getElementById("lobby")) {
+    buildLobby();
+    document.getElementById("lobby").appendChild(ul);
+  } else {
+    document.getElementById("lobby").appendChild(ul);
+  }
 }
 
 function buildLobbyForm() {
   // room created, user joined
 
   // build the lobby form ui
-  login.style.display = "none";
-  document.getElementById("login-container").style.display = "none";
+
   // build lobby
 
   // form should only be visible to lobby owner
@@ -62,7 +76,13 @@ function buildLobbyForm() {
       </select>
       <button onclick=startGame(event) type="submit" id="start-game">Start Game</button>
      `;
-  main.appendChild(form);
+
+  if (!document.getElementById("lobby")) {
+    buildLobby();
+    document.getElementById("lobby").appendChild(form);
+  } else {
+    document.getElementById("lobby").appendChild(form);
+  }
 }
 
 function buildScoreboard(users) {

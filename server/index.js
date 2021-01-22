@@ -19,7 +19,7 @@ const io = require("socket.io")(http);
 const bodyParser = require("body-parser");
 
 // const Room = require("./Room");
-const User = require("./User");
+const Player = require("./Player");
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
@@ -133,27 +133,6 @@ io.on("connection", (socket) => {
   // takes handtypes from client
   // once all users of a room have picked
   // emit the handspicked event
-  socket.on("handPicked", (args) => {
-    console.log(args.handType);
-    let user = users.filter((user) => user.id === socket.id)[0];
-    user.handType = args.handType;
-
-    let opponent = users.filter((o) => {
-      if (user.room === o.room) {
-        if (user.id !== o.id) {
-          return o;
-        }
-      }
-    })[0];
-    // sending to all clients in "game" room except sender
-
-    if (opponent.handType) {
-      console.log(" I aran");
-      socket.to(user.room).emit("handsPicked", {
-        opponent: opponent,
-      });
-    }
-  });
 
   socket.on("disconnecting", () => {
     console.log(socket.rooms); // the Set contains at least the socket ID
