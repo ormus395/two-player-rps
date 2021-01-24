@@ -19,16 +19,12 @@ const io = require("socket.io")(http);
 const bodyParser = require("body-parser");
 
 // const Room = require("./Room");
+const Game = require("./Game");
 const Player = require("./Player");
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-// registered rooms
-let rooms = [];
-
-// created users
-let users = [];
 function filterByRoom(room) {
   // returns the users associated with the specific room
   return users.filter((user) => user.room === room);
@@ -38,114 +34,42 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../", "public/index.html"));
 });
 
-io.on("connection", (socket) => {
-  console.log("User connected to main app");
+let socketOne = "im a socket id";
+let socketTwo = "im another socket id";
 
-  // create a private room
-  socket.on("createRoom", (username, cb) => {
-    console.log("create room event");
-    console.log(`user: ${username}`);
-    // create a room name, rando string
-    let roomName = Math.random().toString().substr(2, 8);
-    // const room = new Room(roomName);
-    const user = new User(socket.id, username, roomName);
+let newGame = new Game();
 
-    // keeps track of connectes users
-    users.push(user);
+newGame.addNewPlayer("Player One", socketOne);
+newGame.addNewPlayer("Player Two", socketTwo);
 
-    // room.addUser(user);
-    // rooms.push(room);
-    // join the room
-    socket.join(user.room);
+function simRound() {
+  // so the game loop would be,
+  // start a round, this should start a timer ** like 5 secs **
+  // where each player has 5 seconds to pick a hand
+  // this after five seconds, the results are evaluated
+  // results are saves then sent back to the client
+  let playerOne = newGame.players[socketOne];
+  let playerTwo = newGame.players[socketTwo];
+  // start
+  let start = setTimeout(() => {
+    // evaluate the results of the round
+    console.log(newGame);
+    if (playerOne.handType > playerTwo.handType)
+      console.log("Player One wins!");
+    else console.log(playerOne.handType > playerTwo.handType);
+  }, 3000);
 
-    // works a lot like request response cycle
-    cb({
-      status: "ok",
-      message: "Room created",
-      // need to filter this
-      // only send users connectes to the created room
-      users: filterByRoom(user.room),
-      room: roomName,
-    });
-  });
+  setTimeout(() => {
+    newGame.onPlayerUpdate(socketOne, "1");
+  }, 1000);
+  setTimeout(() => {
+    newGame.onPlayerUpdate(socketTwo, "2");
+  }, 500);
+}
 
-  // client join toom request, used for other part connecting to private lobby
-  socket.on("joinRoom", ({ username, room }) => {
-    // need to check for empty roomname
-    // get the username and the room name from the client
-    console.log("join room event");
-    console.log(`user: ${username}, roomname: ${room}`);
+simRound();
 
-    let user = new User(socket.id, username, room);
-    users.push(user);
-
-    // join room
-    socket.join(user.room);
-
-    // sends to all users connected to room except sender
-    io.in(user.room).emit("userJoined", {
-      message: `The user: ${user.username} has joined`,
-      // only send users connected to room
-      users: filterByRoom(user.room),
-    });
-
-    console.log(socket.rooms);
-  });
-
-  /* game logic for room */
-  /*
-      socket counts for room
-      // all sockets in the main namespace
-      const ids = await io.allSockets();
-
-      // all sockets in the "chat" namespace
-      const ids = await io.of("/chat").allSockets();
-
-      // all sockets in the "chat" namespace and in the "general" room
-      const ids = await io.of("/chat").in("general").allSockets();
-   */
-
-  // going to need to make server side game logic
-  socket.on("gameStart", (args) => {
-    // create variabled for game logic
-    // receives rounds and throw time
-    // emit gameStarted event
-    // can get room name from socket id
-    // that emitted the event
-    // use this id to filter users
-    // get room name, and emit to that
-    // room from user id
-    let room;
-
-    users.forEach((user) => {
-      if (user.id === socket.id) {
-        room = user.room;
-      }
-    });
-
-    io.in(room).emit("gameStarted", {
-      users: filterByRoom(room),
-      rounds: args.rounds,
-      throwTime: args.throwTime,
-    });
-  });
-
-  // takes handtypes from client
-  // once all users of a room have picked
-  // emit the handspicked event
-
-  socket.on("disconnecting", () => {
-    console.log(socket.rooms); // the Set contains at least the socket ID
-    // need to inform users lobby that they are disconnecting
-  });
-
-  socket.on("disconnect", () => {
-    // socket.rooms.size === 0
-    console.log("user disconnected");
-    console.log(socket.rooms.size);
-    // need to tell the lobby a user disconnected
-  });
-});
+io.on("connection", (socket) => {});
 
 http.listen(3000, () => {
   console.log("listening on 3000");
