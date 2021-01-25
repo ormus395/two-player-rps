@@ -13,7 +13,7 @@ class Player {
     this.id = id; // socket id, unique to client/ connected socket
     this.username = username; // client creates their own
 
-    this.handType = ""; // the client, during the game, will select their handtype
+    this.handType = 0; // the client, during the game, will select their handtype
     this.score = 0; // updated each round based on round evaluation
   }
 
@@ -24,6 +24,7 @@ class Player {
   // takes a string, win or loss
   // increment on win, leave alone on loss
   updateScore(result) {
+    console.log(result);
     if (result === "win") {
       this.score++;
     }

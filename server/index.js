@@ -48,27 +48,33 @@ function simRound() {
   // where each player has 5 seconds to pick a hand
   // this after five seconds, the results are evaluated
   // results are saves then sent back to the client
-  let playerOne = newGame.players[socketOne];
-  let playerTwo = newGame.players[socketTwo];
+  let playerOne = newGame.players[0];
+  let playerTwo = newGame.players[1];
+
   // start
   let start = setTimeout(() => {
     // evaluate the results of the round
+    console.log(newGame.evaluateRound());
     console.log(newGame);
-    if (playerOne.handType > playerTwo.handType)
-      console.log("Player One wins!");
-    else console.log(playerOne.handType > playerTwo.handType);
   }, 3000);
 
   setTimeout(() => {
-    newGame.onPlayerUpdate(socketOne, "1");
+    newGame.onPlayerUpdate(socketOne, 1);
   }, 1000);
   setTimeout(() => {
-    newGame.onPlayerUpdate(socketTwo, "2");
+    newGame.onPlayerUpdate(socketTwo, 3);
   }, 500);
 }
 
 simRound();
 
+// events
+// start round: creates a round timer
+// playerUpdates: take the player choices
+// evaluate round: determines round winner, and update scores
+// end round
+
+console.log(newGame);
 io.on("connection", (socket) => {});
 
 http.listen(3000, () => {
