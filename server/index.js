@@ -18,64 +18,62 @@ const path = require("path");
 const io = require("socket.io")(http);
 const bodyParser = require("body-parser");
 
+const CONSTANTS = require("../lib/constants");
+const UTILS = require("./util");
 // const Room = require("./Room");
-const Game = require("./Game");
-const Player = require("./Player");
 
+const Lobby = require("./Lobby");
+const { constants } = require("buffer");
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-function filterByRoom(room) {
-  // returns the users associated with the specific room
-  return users.filter((user) => user.room === room);
-}
+let lobbies = [];
 // send index html to client
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../", "public/index.html"));
 });
 
-let socketOne = "im a socket id";
-let socketTwo = "im another socket id";
+// fuck timers for now
+// players pick
+// once both players have picked decrement rounds
+// send round results over
+// need to update the players score
 
-let newGame = new Game();
+// socket is the client
+io.on("connection", (socket) => {
+  console.log("A user connected " + socket.id);
 
-newGame.addNewPlayer("Player One", socketOne);
-newGame.addNewPlayer("Player Two", socketTwo);
+  // when the client emits a create lobby event, create a new lobby
 
-function simRound() {
-  // so the game loop would be,
-  // start a round, this should start a timer ** like 5 secs **
-  // where each player has 5 seconds to pick a hand
-  // this after five seconds, the results are evaluated
-  // results are saves then sent back to the client
-  let playerOne = newGame.players[0];
-  let playerTwo = newGame.players[1];
+  socket.on(CONSTANTS.createLobby, (data) => {
+    console.log(data);
+    console.log(UTILS.createRandomString());
 
-  // start
-  let start = setTimeout(() => {
-    // evaluate the results of the round
-    console.log(newGame.evaluateRound());
-    console.log(newGame);
-  }, 3000);
+    let room = UTILS.createRandomString();
+    let newLobby = new Lobby(room);
 
-  setTimeout(() => {
-    newGame.onPlayerUpdate(socketOne, 1);
-  }, 1000);
-  setTimeout(() => {
-    newGame.onPlayerUpdate(socketTwo, 3);
-  }, 500);
-}
+    lobbies.push(newLobby);
 
-simRound();
+    newLobby.addPalyer(data, socket);
 
-// events
-// start round: creates a round timer
-// playerUpdates: take the player choices
-// evaluate round: determines round winner, and update scores
-// end round
+    console.log(newLobby);
+    console.log(lobbies);
 
-console.log(newGame);
-io.on("connection", (socket) => {});
+    socket.join(newLobby.room);
+
+    // need to emit to client that the lobby was created
+    socket.emit(CONSTANTS.lobbyCreated, {
+      self: newLobby.getPlayerById(socket.id),
+    });
+  });
+
+  // need a listener for player joining an existing lobby
+  // need to emit player joined existing lobby
+
+  socket.on("disconnect", () => {
+    console.log("user connected");
+  });
+});
 
 http.listen(3000, () => {
   console.log("listening on 3000");

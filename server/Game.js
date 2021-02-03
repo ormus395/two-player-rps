@@ -10,19 +10,19 @@ end
 
 
 */
+
+const PLAYER_ONE_WON = 1;
+const PLAYER_TWO_WON = 2;
+const DRAW = 3;
+
 const Player = require("./Player");
 
 class Game {
-  constructor() {
+  constructor(rounds, throwTime) {
     this.players = [];
     this.playerCount = 0;
-    this.rounds;
-    this.throwTime;
-  }
-
-  // state is the rounds and throw time
-  init(state) {
-    this.state = { ...state };
+    this.rounds = rounds;
+    this.throwTime = throwTime;
   }
 
   getPlayer(id) {
@@ -38,7 +38,12 @@ class Game {
   // add a player to the game
   // takes the name and id from the socket
   addNewPlayer(name, id) {
+    if (this.playerCount == 2) {
+      return -1;
+    }
+
     this.players.push(new Player(id, name));
+    this.playerCount++;
   }
 
   // remove player
@@ -58,7 +63,8 @@ class Game {
     should probably use promises?
   */
 
-  startRound() {}
+  // update round
+  updateRound() {}
 
   evaluateRound() {
     // evaluate the round based on the two players hand types
@@ -115,11 +121,8 @@ class Game {
     return result;
   }
 
-  endRound() {}
-
-  // need to update the game state
-  update() {
-    return this.state;
+  endRound() {
+    this.rounds--;
   }
 }
 
