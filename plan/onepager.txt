@@ -1,0 +1,20 @@
+A two player rock paper scissors game
+
+people go to the site and are met with a landing
+the landing will have the ability to create a lobby and a username,
+or enter a room name to enter an existing lobby
+
+person creating the lobby will have the ability to set game rules
+the game rules are: rounds and pick time
+after selecting these the lobby is created with a room name, that they can send to a friend
+
+other person joins the lobby, 
+the lobby has a two player limit, and only two plaeyers can join the lobby
+once the players join, the lobby owner can then start the game
+
+the game process works by allowing each person to pick either Rock Paper or scissors
+they also have a set amount of time to do this, so a timer should be shown
+letting the players know how much time they have left
+
+each round is evaluated for a winner and a loser
+a score is kept, and after all the rounds, the winner is announced and the game ends

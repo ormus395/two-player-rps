@@ -23,7 +23,7 @@ class Lobby {
 
   // add users to lobby
   // as well as the lobbies game
-  addPalyer(name, socket) {
+  addPlayer(name, socket) {
     this.clients[socket.id] = socket;
     this.players.push(new Player(socket.id, name));
   }
@@ -37,6 +37,15 @@ class Lobby {
     });
 
     return player;
+  }
+
+  createGame(rounds, throwTime) {
+    let newGame = new Game(rounds, throwTime);
+    for (let i = 0; i < this.players.length; i++) {
+      newGame.addNewPlayer(this.players[i]);
+    }
+
+    this.game = newGame;
   }
 
   // sends the lobby data

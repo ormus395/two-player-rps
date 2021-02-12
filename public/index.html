@@ -6,14 +6,19 @@
     <title>Document</title>
   </head>
   <body>
-    <header>
+    <header id="header">
       <h1>Welcome to Rock Paper Scissors!</h1>
     </header>
-    <main>
+    <main id="main">
       <form id="form">
         <label for="username">Username</label>
         <input id="input" type="text" />
-        <button>Login</button>
+        <button>Create Lobby</button>
+      </form>
+      <form id="join">
+        <label for="lobbyName">Or enter a lobby name to join</label>
+        <input type="text" name="lobbyName" />
+        <button>Join</button>
       </form>
     </main>
     <script src="/socket.io/socket.io.js"></script>

@@ -4,7 +4,11 @@ let socket = io();
 // oponent
 // game state
 // maybe room to send the room to the other player
-let state = {};
+let state = {
+  self: null,
+  oponent: null,
+  room: "",
+};
 
 let form = document.getElementById("form");
 let input = document.getElementById("input");
@@ -26,6 +30,14 @@ socket.on("lobbyCreated", (currentState) => {
   console.log(currentState);
 
   state = currentState;
+
+  let main = document.getElementById("main");
+  while (main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
+
+  createLobby();
+  createRoomLink();
 });
 
 // need a listener for player joined to lobby
@@ -33,3 +45,33 @@ socket.on("lobbyCreated", (currentState) => {
 // need a listener for game creation
 
 // need a listener for game state update
+
+function createLobby() {
+  let main = document.getElementById("main");
+
+  let playerContainer = document.createElement("div");
+
+  let self = document.createElement("div");
+  self.innerText = state.self.username;
+  playerContainer.appendChild(self);
+
+  let oponent;
+  if (state.oponent) {
+    oponent = document.createElement("div");
+    oponent.innerText = state.oponent.username;
+    playerContainer.appendChild(oponent);
+  }
+
+  main.appendChild(playerContainer);
+}
+
+function createRoomLink() {
+  if (state.room.length > 0) {
+    let header = document.getElementById("header");
+
+    let url = document.createElement("p");
+    url.innerText = document.location + "?" + state.room;
+
+    header.appendChild(url);
+  }
+}
