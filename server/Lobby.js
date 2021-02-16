@@ -9,11 +9,12 @@ connected clients as well as sending the information to the clients
 */
 
 class Lobby {
-  constructor(room) {
+  constructor(name) {
     this.clients = {};
     this.players = [];
-    this.room = room;
+    this.name = name;
     this.game;
+    this.round; // this might be the time variable
   }
 
   // initialization creates a game object
@@ -46,7 +47,43 @@ class Lobby {
     }
 
     this.game = newGame;
+    this.startRound();
   }
+
+  onPlayerAction(id, handType) {
+    // get player by id
+    // update the player hand type
+    this.game.onPlayerUpdate(id, handType);
+  }
+
+  startRound() {
+    // create an interval to act as the round loop
+    // the interval will be set to the throw time
+    // this should also allow for listening to player actions
+    // each second send the current game state, and the time left to select the handtype
+
+    // an interval probably wont work
+    // a timeout should be fine for this
+    let clients = this.clients;
+    let rounds = this.game.rounds;
+
+    let timeOut = setTimeout(function () {
+      for (let client in clients) {
+        clients[client].emit("test round", "this is a test");
+      }
+    }, this.game.throwTime * 1000);
+    // let interval = setInterval(function () {
+    //   if (rounds === 1) {
+    //     clearInterval(interval);
+    //   }
+    //   for (let client in clients) {
+    //     clients[client].emit("test round", "this is a test");
+    //   }
+    //   rounds--;
+    // }, this.game.throwTime * 1000);
+  }
+
+  endRound() {}
 
   // sends the lobby data
   // users and game state

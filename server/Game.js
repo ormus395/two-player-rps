@@ -20,7 +20,6 @@ const Player = require("./Player");
 class Game {
   constructor(rounds, throwTime) {
     this.players = [];
-    this.playerCount = 0;
     this.rounds = rounds;
     this.throwTime = throwTime;
   }

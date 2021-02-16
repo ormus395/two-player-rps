@@ -5,6 +5,9 @@ import { io } from "socket.io-client";
 const socket = io();
 
 socket.emit("test", "hello server");
+socket.onAny((event, ...args) => {
+  console.log(event, args);
+});
 
 function App() {
   // app state
@@ -17,6 +20,7 @@ function App() {
   let [input, setInput] = useState("");
   let [rounds, setRounds] = useState(1);
   let [timer, setTimer] = useState(3);
+  let [join, setJoin] = useState("");
 
   const handleInput = (e) => {
     setInput(e.target.value);
@@ -71,6 +75,20 @@ function App() {
         </select>
         <button>Create Lobby</button>
       </form>
+      <p>Or</p>
+      <form>
+        <label htmlFor="join">Join Lobby</label>
+        <input type="text" name="join" value={join} placeholder="Lobby name" />
+        <button>Join</button>
+      </form>
+
+      <button
+        onClick={() => {
+          socket.emit("test emmiting", "server running interval");
+        }}
+      >
+        Test emmitting while server is running interval
+      </button>
     </div>
   );
 }

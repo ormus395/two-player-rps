@@ -18,11 +18,13 @@ const path = require("path");
 const io = require("socket.io")(http);
 const bodyParser = require("body-parser");
 
+let port = process.env.PORT || 3001;
+
 const CONSTANTS = require("./lib/constants");
 const UTILS = require("./server/util");
-// const Room = require("./Room");
 
 const Lobby = require("./server/Lobby");
+
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
@@ -41,40 +43,51 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("A user connected " + socket.id);
 
+  let testLobby = new Lobby("name");
+  testLobby.addPlayer("test player", socket);
+  testLobby.createGame(3, 5);
+
+  socket.onAny((event, ...args) => {
+    console.log(event, ...args);
+  });
+
+  socket.on("test", (data) => {
+    console.log(data);
+  });
   // when the client emits a create lobby event, create a new lobby
 
   socket.on(CONSTANTS.createLobby, (data) => {
     console.log(data);
     console.log(UTILS.createRandomString());
 
-    let room = UTILS.createRandomString();
-    let newLobby = new Lobby(room);
+    let name = UTILS.createRandomString();
+    let newLobby = new Lobby(name);
 
     lobbies.push(newLobby);
 
-    newLobby.addPalyer(data, socket);
+    newLobby.addPlayer(data, socket);
 
     console.log(newLobby);
     console.log(lobbies);
 
-    socket.join(newLobby.room);
+    socket.join(newLobby.name);
 
     // need to emit to client that the lobby was created
     socket.emit(CONSTANTS.lobbyCreated, {
       self: newLobby.getPlayerById(socket.id),
       oponent: null,
-      room: newLobby.room,
+      lobbyName: newLobby.name,
     });
   });
 
   // need a listener for player joining an existing lobby
-  socket.on(CONSTANTS.joinLobby, (username, room) => {
-    // look to see if room exists
+  socket.on(CONSTANTS.joinLobby, (username, lobbyName) => {
+    // look to see if lobby exists
     let lobby = null;
     lobbies.forEach((lob) => {
-      if (lob.room === room) lobby = lob;
+      if (lob.name === lobbyName) lobby = lob;
     });
-    // if room exists
+    // if lobby exists
     if (lobby) {
       if (lobby.getClients().length === 2) {
         // no join
@@ -82,9 +95,9 @@ io.on("connection", (socket) => {
         // dont add player to existing lobby
       } else {
         lobby.addPlayer(username, socket);
-        // when the player is added, should emit to the everyone in the room
+        // when the player is added, should emit to the everyone in the lobby
         // this will allow both clients to update properly
-        io.in(lobby.room).emit(CONSTANTS.playerJoined);
+        io.in(lobby.name).emit(CONSTANTS.playerJoined);
       }
     } else {
       socket.emit(CONSTANTS.noLobby);
@@ -109,13 +122,15 @@ io.on("connection", (socket) => {
 
     lobby.createGame(gameState.rounds, gameState.throwTime);
 
-    io.in(lobby.room).emit(CONSTANTS.gameStart, lobby.game);
+    io.in(lobby.name).emit(CONSTANTS.gameStart, lobby.game);
   });
 
   socket.on(CONSTANTS.playerAction, (handtype) => {
-    // get the lobby the player is connected to
-    // determine if the hand type is legit
-    // if it is, update the game state to match
+    lobbies.forEach((l) => {
+      if (socket.id === l.getPlayerById(socket.id)) {
+        l.onPlayerAction(socket.id, handtype);
+      }
+    });
   });
 
   socket.on("disconnect", () => {
@@ -123,6 +138,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(3000, () => {
-  console.log("listening on 3000");
+http.listen(port, () => {
+  console.log("listening on " + port);
 });
