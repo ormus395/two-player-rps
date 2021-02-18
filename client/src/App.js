@@ -1,16 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-
 import { io } from "socket.io-client";
-const socket = io();
-
-socket.emit("test", "hello server");
-socket.onAny((event, ...args) => {
-  console.log(event, args);
-});
 
 function App() {
   // app state
+  const [socket, setSocket] = useState(null);
+  const [socketConnected, setSocketConnected] = useState(false);
+
   let [state, setState] = useState({
     self: null,
     oponent: null,
@@ -21,6 +17,25 @@ function App() {
   let [rounds, setRounds] = useState(1);
   let [timer, setTimer] = useState(3);
   let [join, setJoin] = useState("");
+
+  useEffect(() => {
+    setSocket(io());
+  }, []);
+
+  useEffect(() => {
+    console.log("I have been called");
+    if (!socket) return;
+
+    socket.onAny((event, ...args) => {
+      console.log(event, args);
+    });
+
+    return function () {
+      socket.offAny((event, ...args) => {
+        console.log(event, args);
+      });
+    };
+  });
 
   const handleInput = (e) => {
     setInput(e.target.value);
