@@ -10,10 +10,6 @@ connected clients as well as sending the information to the clients
 
 class Lobby {
   constructor(name, rounds, throwTime) {
-    console.log(
-      "called in lobby constructor",
-      this.createGame(rounds, throwTime)
-    );
     this.clients = {};
     this.players = [];
     this.name = name;
@@ -86,6 +82,18 @@ class Lobby {
   // to the lobby
   update() {
     // emit to room the new game state
+    for (let clientId in this.clients) {
+      console.log(this);
+      let currentPlayer = this.game.getPlayerById(clientId);
+      let oppenent = this.game.getOpponent(clientId);
+
+      this.clients[clientId].emit("playerJoined", {
+        self: currentPlayer,
+        opponent: oppenent,
+        lobbyName: this.name,
+        game: this.game,
+      });
+    }
   }
 }
 

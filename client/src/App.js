@@ -13,7 +13,7 @@ function App() {
 
   let [state, setState] = useState({
     self: null,
-    oponent: null,
+    opponent: null,
     gameState: {},
     gameStarted: false,
     view: "landing",
@@ -52,6 +52,17 @@ function App() {
     socket.on("playerJoined", (data) => {
       console.log("player joined");
       console.log(data);
+
+      let { self, opponent, lobbyName, game } = data;
+
+      setState({
+        ...state,
+        self,
+        opponent,
+        lobbyName,
+        game,
+        view: "lobby",
+      });
     });
 
     // return function () {
@@ -93,7 +104,7 @@ function App() {
         <Lobby
           lobbyState={{
             self: state.self,
-            openent: state.oponent,
+            opponent: state.opponent,
             game: state.game,
             lobbyName: state.lobbyName,
           }}

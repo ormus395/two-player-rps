@@ -81,6 +81,7 @@ io.on("connection", (socket) => {
   // need a listener for player joining an existing lobby
   socket.on(CONSTANTS.playerJoined, (data) => {
     console.log("Player trying to join lobby");
+    // emit to just this socket that they joined the lobby
     console.log(data);
     // look to see if lobby exists
     let lobby = null;
@@ -102,7 +103,7 @@ io.on("connection", (socket) => {
         // when the player is added, should emit to the everyone in the lobby
         // this will allow both clients to update properly
         // need to send current lobby and game state to the clients
-        io.in(lobby.name).emit(CONSTANTS.playerJoined);
+        lobby.update();
       }
     } else {
       socket.emit(CONSTANTS.noLobby);
@@ -125,9 +126,10 @@ io.on("connection", (socket) => {
       }
     });
 
-    lobby.createGame(gameState.rounds, gameState.throwTime);
-
-    io.in(lobby.name).emit(CONSTANTS.gameStart, lobby.game);
+    // game object is already created
+    // call lobbies gameStart function
+    // this function should start the game, imemdietly start a round
+    // round is a timeout function that will emit game
   });
 
   socket.on(CONSTANTS.playerAction, (handtype) => {

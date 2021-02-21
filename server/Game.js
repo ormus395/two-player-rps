@@ -33,6 +33,18 @@ class Game {
 
     return player;
   }
+  // receives current players id, send player that doesnt have this id
+  getOpponent(id) {
+    let opponent = null;
+
+    this.players.forEach((player) => {
+      if (player.id !== id) {
+        opponent = player;
+      }
+    });
+
+    return opponent;
+  }
 
   // add a player to the game
   // takes the name and id from the socket

@@ -1,8 +1,8 @@
 // lobby receives the player (self), the game state (game object), and openent (null on first render)
 const Lobby = (props) => {
-  let { self, openent, game, lobbyName } = props.lobbyState;
+  let { self, opponent, game, lobbyName } = props.lobbyState;
   console.log(props);
-  console.log(self, openent, game);
+  console.log(self, opponent, game);
   return (
     <div>
       <header>
@@ -12,9 +12,9 @@ const Lobby = (props) => {
       <div>
         <p>You: {self.username}</p>
       </div>
-      <div>{openent ? openent.username : "Waiting for player"}</div>
+      <div>Opponent: {opponent ? opponent.username : "Waiting for player"}</div>
 
-      <button disabled={!openent}>Start Game</button>
+      <button disabled={!opponent}>Start Game</button>
       <div>
         <p>send lobby id to a friend: {lobbyName}</p>
       </div>
