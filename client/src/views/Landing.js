@@ -4,7 +4,7 @@ const Landing = (props) => {
   const [values, setValues] = useState({
     username: "",
     rounds: "1",
-    timer: "5",
+    throwTime: "3",
     lobby: "",
   });
 
@@ -20,7 +20,7 @@ const Landing = (props) => {
       props.handleLobbyCreate({
         username: values.username,
         rounds: values.rounds,
-        timer: values.timer,
+        throwTime: values.throwTime,
       });
     }
   };
@@ -57,10 +57,10 @@ const Landing = (props) => {
             <option value="3">3</option>
             <option value="5">5</option>
           </select>
-          <label htmlFor="timer">Select time limit for throw: </label>
+          <label htmlFor="throwTime">Select time limit for throw: </label>
           <select
-            name="timer"
-            id="timer"
+            name="throwTime"
+            id="throwTime"
             onChange={(e) => handleChange(e)}
             value={values.timer}
           >

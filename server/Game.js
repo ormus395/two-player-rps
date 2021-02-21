@@ -24,7 +24,7 @@ class Game {
     this.throwTime = throwTime;
   }
 
-  getPlayer(id) {
+  getPlayerById(id) {
     let player = null;
 
     this.players.forEach((p) => {
@@ -37,12 +37,7 @@ class Game {
   // add a player to the game
   // takes the name and id from the socket
   addNewPlayer(name, id) {
-    if (this.playerCount == 2) {
-      return -1;
-    }
-
     this.players.push(new Player(id, name));
-    this.playerCount++;
   }
 
   // remove player

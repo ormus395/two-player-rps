@@ -43,10 +43,6 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("A user connected " + socket.id);
 
-  let testLobby = new Lobby("name");
-  testLobby.addPlayer("test player", socket);
-  testLobby.createGame(3, 5);
-
   socket.onAny((event, ...args) => {
     console.log(event, ...args);
   });
@@ -55,17 +51,19 @@ io.on("connection", (socket) => {
     console.log(data);
   });
   // when the client emits a create lobby event, create a new lobby
-
+  // also will receive the game rules, like rounds and timer
   socket.on(CONSTANTS.createLobby, (data) => {
     console.log(data);
-    console.log(UTILS.createRandomString());
+
+    let { username, rounds, throwTime } = data;
 
     let name = UTILS.createRandomString();
-    let newLobby = new Lobby(name);
+    let newLobby = new Lobby(name, rounds, throwTime);
 
+    console.log(newLobby);
     lobbies.push(newLobby);
 
-    newLobby.addPlayer(data, socket);
+    newLobby.addPlayer(username, socket);
 
     console.log(newLobby);
     console.log(lobbies);
@@ -75,18 +73,22 @@ io.on("connection", (socket) => {
     // need to emit to client that the lobby was created
     socket.emit(CONSTANTS.lobbyCreated, {
       self: newLobby.getPlayerById(socket.id),
-      oponent: null,
       lobbyName: newLobby.name,
+      game: newLobby.game,
     });
   });
 
   // need a listener for player joining an existing lobby
-  socket.on(CONSTANTS.joinLobby, (username, lobbyName) => {
+  socket.on(CONSTANTS.playerJoined, (data) => {
+    console.log("Player trying to join lobby");
+    console.log(data);
     // look to see if lobby exists
     let lobby = null;
     lobbies.forEach((lob) => {
-      if (lob.name === lobbyName) lobby = lob;
+      if (lob.name === data.lobby) lobby = lob;
     });
+
+    console.log(lobby);
     // if lobby exists
     if (lobby) {
       if (lobby.getClients().length === 2) {
@@ -94,9 +96,12 @@ io.on("connection", (socket) => {
         socket.emit(CONSTANTS.lobbyFull); // emit to the client that the lobby is full
         // dont add player to existing lobby
       } else {
-        lobby.addPlayer(username, socket);
+        socket.join(lobby.name);
+        console.log(lobby.name);
+        lobby.addPlayer(data.username, socket);
         // when the player is added, should emit to the everyone in the lobby
         // this will allow both clients to update properly
+        // need to send current lobby and game state to the clients
         io.in(lobby.name).emit(CONSTANTS.playerJoined);
       }
     } else {
