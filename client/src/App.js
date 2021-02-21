@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { io } from "socket.io-client";
 
+import Landing from "./views/Landing";
+import Game from "./views/Game";
+import Lobby from "./views/Lobby";
+
 function App() {
   // app state
   const [socket, setSocket] = useState(null);
@@ -11,15 +15,12 @@ function App() {
     self: null,
     oponent: null,
     gameState: {},
+    gameStarted: false,
+    view: "landing",
   });
 
-  let [input, setInput] = useState("");
-  let [rounds, setRounds] = useState(1);
-  let [timer, setTimer] = useState(3);
-  let [join, setJoin] = useState("");
-
   useEffect(() => {
-    setSocket(io());
+    setSocket(io({ autoConnect: false }));
   }, []);
 
   useEffect(() => {
@@ -37,75 +38,36 @@ function App() {
     };
   });
 
-  const handleInput = (e) => {
-    setInput(e.target.value);
+  const handleLobbyCreate = (data) => {
+    console.log(data);
+    // socket.emit("createLobby", {});
   };
 
-  const handleRoundSelect = (e) => {
-    setRounds(e.target.value);
+  const handleLobbyJoin = (data) => {
+    console.log(data);
   };
 
-  const handleTimerSelect = (e) => {
-    setTimer(e.target.value);
-  };
+  let currentView = null;
 
-  const handleLobbyCreate = (e) => {
-    e.preventDefault();
-
-    socket.emit("createLobby", {
-      username: input,
-      rounds: rounds,
-      throwTime: timer,
-    });
-  };
-
-  return (
-    <div>
-      <h1>Rock Paper Scissors</h1>
-      <form onSubmit={(e) => handleLobbyCreate(e)}>
-        <label htmlFor="username">Enter username: </label>
-        <input
-          name="username"
-          type="text"
-          value={input}
-          onChange={(e) => handleInput(e)}
+  switch (state.view) {
+    case "landing":
+      currentView = (
+        <Landing
+          handleLobbyCreate={handleLobbyCreate}
+          handleLobbyJoin={handleLobbyJoin}
         />
-
-        <label htmlFor="rounds">Enter rounds: </label>
-        <select
-          name="rounds"
-          id="rounds"
-          value={rounds}
-          onChange={(e) => handleRoundSelect(e)}
-        >
-          <option value="1">1</option>
-          <option value="3">3</option>
-          <option value="5">5</option>
-        </select>
-        <label htmlFor="timer">Select time limit for throw: </label>
-        <select name="timer" id="timer">
-          <option value="3">3 Seconds</option>
-          <option value="5">5 Seconds</option>
-          <option value="7">7 Seconds</option>
-        </select>
-        <button>Create Lobby</button>
-      </form>
-      <p>Or</p>
-      <form>
-        <label htmlFor="join">Join Lobby</label>
-        <input type="text" name="join" value={join} placeholder="Lobby name" />
-        <button>Join</button>
-      </form>
-
-      <button
-        onClick={() => {
-          socket.emit("test emmiting", "server running interval");
-        }}
-      >
-        Test emmitting while server is running interval
-      </button>
-    </div>
-  );
+      );
+      break;
+    case "game":
+      currentView = <Game />;
+      break;
+    case "lobby":
+      currentView = <Lobby />;
+      break;
+    default:
+      currentView = <Landing />;
+  }
+  return <div>{currentView}</div>;
 }
 
 export default App;
