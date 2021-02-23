@@ -103,7 +103,7 @@ io.on("connection", (socket) => {
         // when the player is added, should emit to the everyone in the lobby
         // this will allow both clients to update properly
         // need to send current lobby and game state to the clients
-        lobby.update();
+        lobby.update(CONSTANTS.playerJoined);
       }
     } else {
       socket.emit(CONSTANTS.noLobby);
@@ -113,15 +113,19 @@ io.on("connection", (socket) => {
   // start the game, this sends the client an event
   // to rewrite the ui
   // also use this event to create the server game object
-  socket.on(CONSTANTS.gameStart, (gameState) => {
+  socket.on(CONSTANTS.gameStart, () => {
+    console.log("game started");
     // create the game by the lobby
     // the lobby has the connected players,
     // find lobby by socket id
+
+    // dont let players start a game until their are two players
+    // maybe add a ready function to wait for players to be ready?
     let playerId = socket.id;
     let lobby;
 
     lobbies.forEach((l) => {
-      if (l.getPlayerById().id === playerId) {
+      if (l.getPlayerById(playerId).id === playerId) {
         lobby = l;
       }
     });
@@ -130,14 +134,17 @@ io.on("connection", (socket) => {
     // call lobbies gameStart function
     // this function should start the game, imemdietly start a round
     // round is a timeout function that will emit game
+    lobby.update(CONSTANTS.gameStart);
+    lobby.startRound();
   });
 
   socket.on(CONSTANTS.playerAction, (handtype) => {
-    lobbies.forEach((l) => {
-      if (socket.id === l.getPlayerById(socket.id)) {
-        l.onPlayerAction(socket.id, handtype);
-      }
-    });
+    console.log(handtype);
+    // lobbies.forEach((l) => {
+    //   if (socket.id === l.getPlayerById(socket.id)) {
+    //     l.onPlayerAction(socket.id, handtype);
+    //   }
+    // });
   });
 
   socket.on("disconnect", () => {

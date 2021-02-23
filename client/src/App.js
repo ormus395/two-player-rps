@@ -14,7 +14,7 @@ function App() {
   let [state, setState] = useState({
     self: null,
     opponent: null,
-    gameState: {},
+    game: {},
     gameStarted: false,
     view: "landing",
     lobbyName: "",
@@ -29,6 +29,7 @@ function App() {
     if (!socket) return;
 
     socket.onAny((event, ...args) => {
+      console.log("I am the any listener");
       console.log(event, args);
     });
 
@@ -65,11 +66,27 @@ function App() {
       });
     });
 
-    // return function () {
-    //   socket.offAny((event, ...args) => {
-    //     console.log(event, args);
-    //   });
-    // };
+    socket.on("gameStart", (data) => {
+      let { self, opponent, lobbyName, game } = data;
+
+      setState({
+        ...state,
+        self,
+        opponent,
+        lobbyName,
+        game,
+        view: "game",
+        gameStarted: true,
+      });
+    });
+
+    socket.on("roundEnd", function () {
+      console.log("round ended");
+    });
+
+    return function () {
+      socket.removeAllListeners();
+    };
   });
 
   const handleLobbyCreate = (data) => {
@@ -85,6 +102,15 @@ function App() {
     socket.emit("playerJoined", data);
   };
 
+  const handleGameStart = () => {
+    socket.emit("gameStart");
+  };
+
+  // handtype button
+  const handlePlayerAction = (data) => {
+    socket.emit("playerAction", data);
+  };
+
   let currentView = null;
 
   switch (state.view) {
@@ -97,7 +123,14 @@ function App() {
       );
       break;
     case "game":
-      currentView = <Game />;
+      currentView = (
+        <Game
+          self={state.self}
+          opponent={state.opponent}
+          game={state.game}
+          handlePlayerAction={handlePlayerAction}
+        />
+      );
       break;
     case "lobby":
       currentView = (
@@ -108,6 +141,7 @@ function App() {
             game: state.game,
             lobbyName: state.lobbyName,
           }}
+          handleGameStart={handleGameStart}
         />
       );
       break;

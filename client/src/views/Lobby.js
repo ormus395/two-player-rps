@@ -14,7 +14,9 @@ const Lobby = (props) => {
       </div>
       <div>Opponent: {opponent ? opponent.username : "Waiting for player"}</div>
 
-      <button disabled={!opponent}>Start Game</button>
+      <button onClick={props.handleGameStart} disabled={!opponent}>
+        Start Game
+      </button>
       <div>
         <p>send lobby id to a friend: {lobbyName}</p>
       </div>

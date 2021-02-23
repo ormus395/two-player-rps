@@ -1,3 +1,4 @@
+const CONSTANTS = require("../lib/constants");
 const Game = require("./Game");
 const Player = require("./Player");
 /*
@@ -61,7 +62,7 @@ class Lobby {
 
     let timeOut = setTimeout(function () {
       for (let client in clients) {
-        clients[client].emit("test round", "this is a test");
+        clients[client].emit(CONSTANTS.roundEnd);
       }
     }, this.game.throwTime * 1000);
     // let interval = setInterval(function () {
@@ -80,14 +81,14 @@ class Lobby {
   // sends the lobby data
   // users and game state
   // to the lobby
-  update() {
+  update(event) {
     // emit to room the new game state
     for (let clientId in this.clients) {
       console.log(this);
       let currentPlayer = this.game.getPlayerById(clientId);
       let oppenent = this.game.getOpponent(clientId);
 
-      this.clients[clientId].emit("playerJoined", {
+      this.clients[clientId].emit(event, {
         self: currentPlayer,
         opponent: oppenent,
         lobbyName: this.name,
