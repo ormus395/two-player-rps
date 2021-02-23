@@ -43,6 +43,10 @@ class Lobby {
     return this.game.getPlayerById(id);
   }
 
+  hasClient(id) {
+    return Object.keys(this.clients).includes(id);
+  }
+
   onPlayerAction(id, handType) {
     // get player by id
     // update the player hand type

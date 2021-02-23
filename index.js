@@ -103,6 +103,7 @@ io.on("connection", (socket) => {
         // when the player is added, should emit to the everyone in the lobby
         // this will allow both clients to update properly
         // need to send current lobby and game state to the clients
+        console.log(lobbies);
         lobby.update(CONSTANTS.playerJoined);
       }
     } else {
@@ -115,6 +116,8 @@ io.on("connection", (socket) => {
   // also use this event to create the server game object
   socket.on(CONSTANTS.gameStart, () => {
     console.log("game started");
+    console.log(lobbies);
+    console.log(socket.id);
     // create the game by the lobby
     // the lobby has the connected players,
     // find lobby by socket id
@@ -125,7 +128,7 @@ io.on("connection", (socket) => {
     let lobby;
 
     lobbies.forEach((l) => {
-      if (l.getPlayerById(playerId).id === playerId) {
+      if (l.hasClient(playerId)) {
         lobby = l;
       }
     });
