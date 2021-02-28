@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import Landing from "./views/Landing";
 import Game from "./views/Game";
 import Lobby from "./views/Lobby";
+import Modal from "./components/Modal/Modal";
 
 function App() {
   // app state
@@ -19,6 +20,8 @@ function App() {
     view: "landing",
     lobbyName: "",
   });
+
+  let [modalState, setModalState] = useState(false);
 
   useEffect(() => {
     setSocket(io({ autoConnect: false }));
@@ -83,7 +86,9 @@ function App() {
     return function () {};
   });
 
-  const handleLobbyCreate = (data) => {};
+  const handleModal = () => {
+    setModalState(!modalState);
+  };
 
   const handleLobbyJoin = (data) => {
     console.log(data);
@@ -101,11 +106,7 @@ function App() {
   switch (state.view) {
     case "landing":
       currentView = (
-        <Landing
-          handleLobbyCreate={handleLobbyCreate}
-          handleLobbyJoin={handleLobbyJoin}
-          socket={socket}
-        />
+        <Landing handleLobbyJoin={handleLobbyJoin} socket={socket} />
       );
       break;
     case "game":
@@ -135,7 +136,20 @@ function App() {
     default:
       currentView = <Landing />;
   }
-  return <div className="container">{currentView}</div>;
+  return (
+    <div className="container">
+      {modalState ? (
+        <Modal
+          show={modalState}
+          handleModal={handleModal}
+          text="Looks like you've been disconnected"
+        />
+      ) : (
+        ""
+      )}
+      {currentView}
+    </div>
+  );
 }
 
 export default App;

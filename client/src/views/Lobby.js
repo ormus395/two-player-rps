@@ -1,3 +1,4 @@
+import Button from "../components/Button/Button";
 // lobby receives the player (self), the game state (game object), and openent (null on first render)
 const Lobby = (props) => {
   let { self, opponent, game, lobbyName } = props.lobbyState;
@@ -14,9 +15,13 @@ const Lobby = (props) => {
       </div>
       <div>Opponent: {opponent ? opponent.username : "Waiting for player"}</div>
 
-      <button onClick={props.handleGameStart} disabled={!opponent}>
+      <Button
+        className="btn"
+        handleClick={props.handleGameStart}
+        disabled={!opponent}
+      >
         Start Game
-      </button>
+      </Button>
       <div>
         <p>send lobby id to a friend: {lobbyName}</p>
       </div>
