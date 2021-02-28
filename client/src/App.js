@@ -35,17 +35,17 @@ function App() {
 
     // socket will emmit the creation of the lobby,
     // send the player object (self), openent, lobby name, and game state and other
-    // connected players
+    // connected player
 
     socket.on("lobbyCreated", (data) => {
-      console.log(data);
+      console.log("lobby created");
       let { self, lobbyName, game } = data;
 
       setState({
         ...state,
         self,
-        lobbyName,
         game,
+        lobbyName,
         view: "lobby",
       });
     });
@@ -80,20 +80,10 @@ function App() {
       });
     });
 
-    socket.on("roundEnd", function () {
-      console.log("round ended");
-    });
-
-    return function () {
-      socket.removeAllListeners();
-    };
+    return function () {};
   });
 
-  const handleLobbyCreate = (data) => {
-    console.log(data);
-    socket.connect();
-    socket.emit("createLobby", data);
-  };
+  const handleLobbyCreate = (data) => {};
 
   const handleLobbyJoin = (data) => {
     console.log(data);
@@ -106,11 +96,6 @@ function App() {
     socket.emit("gameStart");
   };
 
-  // handtype button
-  const handlePlayerAction = (data) => {
-    socket.emit("playerAction", data);
-  };
-
   let currentView = null;
 
   switch (state.view) {
@@ -119,6 +104,7 @@ function App() {
         <Landing
           handleLobbyCreate={handleLobbyCreate}
           handleLobbyJoin={handleLobbyJoin}
+          socket={socket}
         />
       );
       break;
@@ -128,7 +114,7 @@ function App() {
           self={state.self}
           opponent={state.opponent}
           game={state.game}
-          handlePlayerAction={handlePlayerAction}
+          socket={socket}
         />
       );
       break;
@@ -142,13 +128,14 @@ function App() {
             lobbyName: state.lobbyName,
           }}
           handleGameStart={handleGameStart}
+          socket={socket}
         />
       );
       break;
     default:
       currentView = <Landing />;
   }
-  return <div>{currentView}</div>;
+  return <div className="container">{currentView}</div>;
 }
 
 export default App;

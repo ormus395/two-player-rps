@@ -53,7 +53,7 @@ class Lobby {
     this.game.onPlayerUpdate(id, handType);
   }
 
-  startRound() {
+  /*startRound() {
     // create an interval to act as the round loop
     // the interval will be set to the throw time
     // this should also allow for listening to player actions
@@ -78,7 +78,7 @@ class Lobby {
     //   }
     //   rounds--;
     // }, this.game.throwTime * 1000);
-  }
+  }*/
 
   endRound() {}
 

@@ -1,0 +1,45 @@
+.btn {
+  border: none;
+  border-radius: 2px;
+  color: white;
+  cursor: pointer;
+  background-color: hsl(230, 89%, 62%);
+  padding: 0.5rem;
+}
+
+.circle {
+  border: 10px solid rgba(240, 228, 228, 0.884);
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  margin: 0 1rem;
+  transition: border-color 200ms ease-in-out;
+}
+
+.circle:hover {
+  border-color: black;
+}
+
+.rock {
+  background-image: url(../../assets/images/icon-rock.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.paper {
+  background-image: url(../../assets/images/icon-paper.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.scissors {
+  background-image: url(../../assets/images/icon-scissors.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}

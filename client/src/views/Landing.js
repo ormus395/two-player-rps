@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Logo from "../components/Logo/Logo";
+import Button from "../components/Button/Button";
 
 const Landing = (props) => {
+  const { socket } = props;
+
   const [values, setValues] = useState({
     username: "",
     rounds: "1",
     throwTime: "3",
     lobby: "",
   });
+
+  const handleLobbyCreate = (data) => {
+    console.log(data);
+    socket.connect();
+    socket.emit("createLobby", data);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,7 +27,7 @@ const Landing = (props) => {
         lobby: values.lobby,
       });
     } else {
-      props.handleLobbyCreate({
+      handleLobbyCreate({
         username: values.username,
         rounds: values.rounds,
         throwTime: values.throwTime,
@@ -34,9 +44,13 @@ const Landing = (props) => {
 
   return (
     <div>
-      <h1>Rock Paper Scissors</h1>
+      <header>
+        <div className="logo">
+          <Logo />
+        </div>
+      </header>
 
-      <div>
+      <div className="form-container">
         <form id="create" onSubmit={(e) => handleSubmit(e)}>
           <label htmlFor="username">Enter username: </label>
           <input
@@ -44,8 +58,9 @@ const Landing = (props) => {
             type="text"
             value={values.username}
             onChange={(e) => handleChange(e)}
+            placeholder="username"
           />
-
+          <p>Create Private Lobby</p>
           <label htmlFor="rounds">Enter rounds: </label>
           <select
             name="rounds"
@@ -68,7 +83,7 @@ const Landing = (props) => {
             <option value="5">5 Seconds</option>
             <option value="7">7 Seconds</option>
           </select>
-          <button>Create Lobby</button>
+          <Button className="btn">Create Lobby</Button>
         </form>
         <p>Or</p>
         <form id="join" onSubmit={(e) => handleSubmit(e)}>
@@ -80,7 +95,7 @@ const Landing = (props) => {
             placeholder="Lobby name"
             onChange={(e) => handleChange(e)}
           />
-          <button>Join</button>
+          <Button className="btn">Join</Button>
         </form>
       </div>
     </div>

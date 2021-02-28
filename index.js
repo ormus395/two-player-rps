@@ -53,20 +53,15 @@ io.on("connection", (socket) => {
   // when the client emits a create lobby event, create a new lobby
   // also will receive the game rules, like rounds and timer
   socket.on(CONSTANTS.createLobby, (data) => {
-    console.log(data);
-
+    console.log("lobby created");
     let { username, rounds, throwTime } = data;
 
     let name = UTILS.createRandomString();
     let newLobby = new Lobby(name, rounds, throwTime);
 
-    console.log(newLobby);
     lobbies.push(newLobby);
 
     newLobby.addPlayer(username, socket);
-
-    console.log(newLobby);
-    console.log(lobbies);
 
     socket.join(newLobby.name);
 
@@ -138,16 +133,21 @@ io.on("connection", (socket) => {
     // this function should start the game, imemdietly start a round
     // round is a timeout function that will emit game
     lobby.update(CONSTANTS.gameStart);
-    lobby.startRound();
+    // lobby.startRound();
   });
 
   socket.on(CONSTANTS.playerAction, (handtype) => {
     console.log(handtype);
-    // lobbies.forEach((l) => {
-    //   if (socket.id === l.getPlayerById(socket.id)) {
-    //     l.onPlayerAction(socket.id, handtype);
-    //   }
-    // });
+    let lobby = null;
+
+    lobbies.forEach((l) => {
+      if (l.hasClient(socket.id)) {
+        lobby = l;
+        l.onPlayerAction(socket.id, handtype);
+      }
+    });
+
+    lobby.update("some game update");
   });
 
   socket.on("disconnect", () => {

@@ -58,7 +58,7 @@ class Game {
   // player selected their handtype
   onPlayerUpdate(id, newHandType) {
     // update the player by the unique socket id
-    this.getPlayer(id).updateHandtype(newHandType);
+    this.getPlayerById(id).updateHandtype(newHandType);
   }
 
   /*

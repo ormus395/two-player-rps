@@ -1,27 +1,94 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import Button from "../components/Button/Button";
 
 const Game = (props) => {
   console.log("game component", props);
 
-  let you = props.self;
-  let opponent = props.opponent;
+  const [gameState, setGameState] = useState({
+    game: props.game,
+    self: props.self,
+    opponent: props.opponent,
+  });
+  const [playerSelected, setPlayerSelected] = useState(false);
 
-  let game = props.game;
+  let { socket } = props;
+
+  useEffect(() => {
+    socket.on("some game update", (data) => {
+      // do something. we have the game state, no need to update higher up the tree
+      setGameState({
+        ...gameState,
+        self: data.self,
+        opponent: data.opponent,
+        game: data.game,
+      });
+    });
+
+    return function () {
+      socket.off("some game update");
+    };
+  });
+
+  // handtype button
+  const handlePlayerAction = (data) => {
+    socket.emit("playerAction", data);
+    setPlayerSelected(true);
+  };
+
+  // rock = 1, paper = 2, scissors = 3
+  const translateHandType = (hand) => {
+    let translate = "";
+    switch (hand) {
+      case 0:
+        translate = "Waiting...";
+        break;
+      case 1:
+        translate = "Rock";
+        break;
+      case 2:
+        translate = "Paper";
+        break;
+      case 3:
+        translate = "Scissors";
+        break;
+      default:
+        translate = "Dude something broke";
+    }
+
+    return translate;
+  };
+
+  let { game, opponent, self } = gameState;
 
   return (
     <div>
       <h1>
-        Your Score: {you.score} - Your Opponent: {opponent.score}
+        Your Score: {self.score} - Your Opponent: {opponent.score}
       </h1>
       <h4>Rounds left: {game.rounds}</h4>
       <h4>Round Timer: WILL WORK ON THIS IN A BIT</h4>
-      <div>
-        <button onClick={() => props.handlePlayerAction("rock")}>Rock</button>
-        <button onClick={() => props.handlePlayerAction("paper")}>Paper</button>
-        <button onClick={() => props.handlePlayerAction("scissors")}>
-          Scissors
-        </button>
-      </div>
+      {playerSelected ? (
+        <div>
+          <h3>You picked: {translateHandType(self.handType)}</h3>
+          <h3>Your opponent picked: {translateHandType(opponent.handType)}</h3>
+        </div>
+      ) : (
+        <div>
+          <Button
+            handleClick={() => handlePlayerAction(1)}
+            className="circle rock"
+          />
+          <Button
+            handleClick={() => handlePlayerAction(2)}
+            className="circle paper"
+          />
+          <Button
+            handleClick={() => handlePlayerAction(3)}
+            className="circle scissors"
+          />
+        </div>
+      )}
     </div>
   );
 };
