@@ -21,7 +21,10 @@ function App() {
     lobbyName: "",
   });
 
-  let [modalState, setModalState] = useState(false);
+  let [modalState, setModalState] = useState({
+    show: false,
+    message: "",
+  });
 
   useEffect(() => {
     setSocket(io({ autoConnect: false }));
@@ -83,11 +86,37 @@ function App() {
       });
     });
 
-    return function () {};
+    socket.on("connect_error", (err) => {
+      console.log(err);
+      setModalState({
+        show: true,
+        message: "Looks like something serverside broke...",
+      });
+
+      setState({
+        ...state,
+        self: null,
+        opponent: null,
+        game: {},
+        gameStarted: false,
+        view: "landing",
+        lobbyName: "",
+      });
+
+      socket.disconnect(true);
+    });
+
+    return function () {
+      // socket.off("connect_error");
+    };
   });
 
   const handleModal = () => {
-    setModalState(!modalState);
+    setModalState({
+      ...modalState,
+      show: !modalState.show,
+      message: "",
+    });
   };
 
   const handleLobbyJoin = (data) => {
@@ -139,11 +168,11 @@ function App() {
   return (
     <div className="app">
       <div className="container">
-        {modalState ? (
+        {modalState.show ? (
           <Modal
-            show={modalState}
+            show={modalState.show}
             handleModal={handleModal}
-            text="Looks like you've been disconnected"
+            text={modalState.message}
           />
         ) : (
           ""
