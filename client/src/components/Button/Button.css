@@ -7,6 +7,11 @@
   padding: 0.5rem;
 }
 
+.btn:disabled {
+  background-color: darkgray;
+  cursor: no-drop;
+}
+
 .circle {
   border: 10px solid rgba(240, 228, 228, 0.884);
   cursor: pointer;

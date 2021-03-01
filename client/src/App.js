@@ -137,17 +137,19 @@ function App() {
       currentView = <Landing />;
   }
   return (
-    <div className="container">
-      {modalState ? (
-        <Modal
-          show={modalState}
-          handleModal={handleModal}
-          text="Looks like you've been disconnected"
-        />
-      ) : (
-        ""
-      )}
-      {currentView}
+    <div className="app">
+      <div className="container">
+        {modalState ? (
+          <Modal
+            show={modalState}
+            handleModal={handleModal}
+            text="Looks like you've been disconnected"
+          />
+        ) : (
+          ""
+        )}
+        {currentView}
+      </div>
     </div>
   );
 }

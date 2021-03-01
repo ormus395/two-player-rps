@@ -1,5 +1,5 @@
 import logo from "../../assets/images/logo.svg";
-
+import "./Logo.css";
 console.log(logo);
 
 const Logo = (props) => {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "../components/Button/Button";
+import Logo from "../components/Logo/Logo";
 
 const Game = (props) => {
   console.log("game component", props);
@@ -63,9 +64,18 @@ const Game = (props) => {
 
   return (
     <div>
-      <h1>
-        Your Score: {self.score} - Your Opponent: {opponent.score}
-      </h1>
+      <header className="header header--game">
+        <div className="logo">
+          <Logo />
+        </div>
+        <div className="score">
+          <h2>Score</h2>
+          <div>
+            <h3>You: {self.score}</h3>
+            <h3>Opponent: {opponent.score}</h3>
+          </div>
+        </div>
+      </header>
       <h4>Rounds left: {game.rounds}</h4>
       <h4>Round Timer: WILL WORK ON THIS IN A BIT</h4>
       {playerSelected ? (

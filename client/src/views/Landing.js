@@ -44,7 +44,7 @@ const Landing = (props) => {
 
   return (
     <div>
-      <header>
+      <header className="header">
         <div className="logo">
           <Logo />
         </div>

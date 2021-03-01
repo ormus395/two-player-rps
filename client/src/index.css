@@ -7,26 +7,29 @@
 }
 
 html {
-  font-size: 18px;
+  font-size: 16px;
+  height: 100%;
 }
 
 body {
   background: radial-gradient(hsl(214, 47%, 23%), hsl(237, 49%, 15%));
   background-repeat: no-repeat;
+  background-size: cover;
 
   color: white;
   font-family: "Barlow Semi Condensed", sans-serif;
+
+  height: 100%;
+
+  line-height: 1;
+
   margin: 0;
   padding: 0;
-  height: 100vh;
   position: relative;
 }
 
-header {
-  display: flex;
-  justify-content: center;
-
-  margin: 18px 0;
+img {
+  width: 100%;
 }
 
 .container {
@@ -38,6 +41,29 @@ header {
   padding: 18px 18px;
 }
 
+/* header */
+.header {
+  display: flex;
+  justify-content: center;
+
+  margin: 18px 0;
+}
+
+.header--game {
+  align-items: center;
+  justify-content: space-between;
+  border: 3px solid hsl(217, 16%, 45%);
+  border-radius: 15px;
+  padding: 0.5rem;
+}
+
+.score {
+  background-color: white;
+  border-radius: 15px;
+  color: hsl(229, 64%, 46%);
+  padding: 8px;
+  text-align: center;
+}
 /* forms */
 
 form {
@@ -47,7 +73,7 @@ form {
 }
 
 .form-container {
-  width: 80%;
+  width: 90%;
 
   max-width: 550px;
   margin: 0 auto;
@@ -78,4 +104,11 @@ select {
 
 .hidden {
   display: none;
+}
+
+/* lobby */
+.lobby-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
