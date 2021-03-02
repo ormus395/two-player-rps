@@ -32,18 +32,16 @@ const Lobby = (props) => {
         </Button>
       </div>
 
-      <div>
-        <p>
-          send lobby id to a friend: {lobbyName}
-          <Button
-            className="btn"
-            handleClick={() => {
-              navigator.clipboard.writeText(lobbyName);
-            }}
-          >
-            Copy Me
-          </Button>
-        </p>
+      <div className="copy-link">
+        <p>send lobby id to a friend: {lobbyName}</p>
+        <Button
+          className="btn"
+          handleClick={() => {
+            navigator.clipboard.writeText(lobbyName);
+          }}
+        >
+          Copy Me
+        </Button>
       </div>
     </div>
   );

@@ -79,9 +79,25 @@ const Game = (props) => {
       <h4>Rounds left: {game.rounds}</h4>
       <h4>Round Timer: WILL WORK ON THIS IN A BIT</h4>
       {playerSelected ? (
-        <div>
-          <h3>You picked: {translateHandType(self.handType)}</h3>
-          <h3>Your opponent picked: {translateHandType(opponent.handType)}</h3>
+        <div className="round-end">
+          <div className="self">
+            <h3>{self.username}</h3>
+            <Button
+              className={`circle ${translateHandType(
+                self.handType
+              ).toLowerCase()}`}
+              disabled={true}
+            />
+          </div>
+          <div className="opponent">
+            <h3>{opponent.username}</h3>
+            <Button
+              className={`circle ${translateHandType(
+                opponent.handType
+              ).toLowerCase()}`}
+              disabled={true}
+            />
+          </div>
         </div>
       ) : (
         <div>

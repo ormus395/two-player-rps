@@ -112,3 +112,20 @@ select {
   display: flex;
   flex-direction: column;
 }
+
+.copy-link {
+  display: flex;
+  align-items: center;
+
+  margin-top: 1rem;
+}
+
+.copy-link p {
+  margin: 0 10px 0;
+}
+
+/* game */
+.round-end {
+  display: flex;
+  justify-content: space-evenly;
+}
